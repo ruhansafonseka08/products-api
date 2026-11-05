@@ -9,8 +9,21 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-    private List<Product> products = new ArrayList<>();
-    private Long nextId = 1L;
+    private final List<Product> products = new ArrayList<>();
+
+    public ProductService() {
+        products.add(new DigitalProduct(1L, "E-book", 9.99, "/dl/1", 4.2));
+        products.add(new PhysicalProduct(2L, "Mug", 8.50, 0.4, "10x10x12 cm"));
+    }
+    public List<String> getAllSummaries() {
+
+        List<String> summaries = new ArrayList<>();
+
+        for (Product p : products) {
+            summaries.add(p.getSummary());
+        }
+        return summaries;
+    }
 
     public List<Product> getAllProducts() {
         return products;
@@ -23,7 +36,6 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
-        product.setId(nextId++);
         products.add(product);
         return product;
     }
@@ -34,7 +46,7 @@ public class ProductService {
 
     public List<Product> findByName(String name) {
         return products.stream()
-                .filter(p -> p.getName().contains(name))
+                .filter(p -> p.getName().toLowerCase().contains(name.toLowerCase()))
                 .toList();
     }
 }
